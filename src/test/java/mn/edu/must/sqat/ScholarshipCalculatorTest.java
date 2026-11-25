@@ -125,4 +125,27 @@ class ScholarshipCalculatorTest {
         // credits < 0
         assertThrows(IllegalArgumentException.class, () -> calc.scholarship(3.5, -1, false));
     }
+
+    // ===== Hesseg C: davtaltiin zaagiin testuud (0 / 1 / 2+) =====
+
+    @Test
+    void gpaLoopZeroIterationsEmptyAndNull() {
+        // 0 udaa: hooson massiv ba null ali ali ni exception shidne
+        assertAll(
+            () -> assertThrows(IllegalArgumentException.class, () -> calc.gpa(new double[0])),
+            () -> assertThrows(IllegalArgumentException.class, () -> calc.gpa(null))
+        );
+    }
+
+    @Test
+    void gpaLoopOneIteration() {
+        // 1 udaa: neg dunteig
+        assertEquals(4.0, calc.gpa(new double[] {95}), 1e-9);
+    }
+
+    @Test
+    void gpaLoopManyIterations() {
+        // 2+ udaa: (4+3+2+1)/4 = 2.5
+        assertEquals(2.5, calc.gpa(new double[] {95, 85, 75, 65}), 1e-9);
+    }
 }
