@@ -8,7 +8,7 @@ class ScholarshipCalculatorTest {
 
     private final ScholarshipCalculator calc = new ScholarshipCalculator();
 
-    // Hesseg A: zovhon heviin (happy path) urgalj
+    // ===== Hesseg A: heviin urgalj =====
 
     @Test
     void letterGradeA() {
@@ -34,5 +34,95 @@ class ScholarshipCalculatorTest {
     @Test
     void scholarshipHalf() {
         assertEquals(50, calc.scholarship(3.1, 16, false));
+    }
+
+    // ===== Hesseg B: branch 100% hurtel nemsen testuud =====
+
+    @Test
+    void letterGradeC() {
+        assertEquals("C", calc.letterGrade(75));
+    }
+
+    @Test
+    void letterGradeD() {
+        assertEquals("D", calc.letterGrade(65));
+    }
+
+    @Test
+    void letterGradeF() {
+        assertEquals("F", calc.letterGrade(30));
+    }
+
+    @Test
+    void letterGradeNegativeThrows() {
+        // score < 0 nohtsol
+        assertThrows(IllegalArgumentException.class, () -> calc.letterGrade(-1));
+    }
+
+    @Test
+    void letterGradeAbove100Throws() {
+        // score > 100 nohtsol
+        assertThrows(IllegalArgumentException.class, () -> calc.letterGrade(101));
+    }
+
+    @Test
+    void gpaNullThrows() {
+        assertThrows(IllegalArgumentException.class, () -> calc.gpa(null));
+    }
+
+    @Test
+    void gpaEmptyThrows() {
+        assertThrows(IllegalArgumentException.class, () -> calc.gpa(new double[0]));
+    }
+
+    @Test
+    void gpaWithFGradeHitsDefaultBranch() {
+        // A, B, C, D, F -> (4+3+2+1+0)/5 = 2.0 ; switch-iin default (F) salaa
+        assertEquals(2.0, calc.gpa(new double[] {95, 85, 75, 65, 30}), 1e-9);
+    }
+
+    @Test
+    void scholarshipViolationGivesZero() {
+        assertEquals(0, calc.scholarship(3.9, 16, true));
+    }
+
+    @Test
+    void scholarship70() {
+        assertEquals(70, calc.scholarship(3.5, 13, false));
+    }
+
+    @Test
+    void scholarshipHighGpaLowCreditsFallsTo70() {
+        // gpa >= 3.8 vnen, credits >= 15 hudal -> 70 zam
+        assertEquals(70, calc.scholarship(3.9, 14, false));
+    }
+
+    @Test
+    void scholarship50GoodGpaLowCredits() {
+        // gpa >= 3.4 vnen, credits >= 12 hudal -> 50 zam
+        assertEquals(50, calc.scholarship(3.5, 10, false));
+    }
+
+    @Test
+    void scholarshipLowGpaGivesZero() {
+        assertEquals(0, calc.scholarship(2.5, 16, false));
+    }
+
+    @Test
+    void scholarshipNegativeGpaThrows() {
+        // gpa < 0
+        assertThrows(IllegalArgumentException.class, () -> calc.scholarship(-0.1, 15, false));
+    }
+
+    @Test
+    void scholarshipGpaAbove4Throws() {
+        // gpa > 4
+        assertThrows(IllegalArgumentException.class, () -> calc.scholarship(4.1, 15, false));
+    }
+
+    @Test
+    void scholarshipNegativeCreditsThrows() {
+        // credits < 0
+        assertThrows(IllegalArgumentException.class, () -> calc.scholarship(3.5, -1, false));
     }
 }
