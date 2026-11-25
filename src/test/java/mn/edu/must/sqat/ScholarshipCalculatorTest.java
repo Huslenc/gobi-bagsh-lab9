@@ -148,4 +148,41 @@ class ScholarshipCalculatorTest {
         // 2+ udaa: (4+3+2+1)/4 = 2.5
         assertEquals(2.5, calc.gpa(new double[] {95, 85, 75, 65}), 1e-9);
     }
+
+    // ===== Hesseg D: zaag utgiin testuud (spec: 60-69.99 = D) =====
+
+    @Test
+    void boundary60IsD() {
+        assertEquals("D", calc.letterGrade(60));
+    }
+
+    @Test
+    void boundary59_99IsF() {
+        assertEquals("F", calc.letterGrade(59.99));
+    }
+
+    @Test
+    void boundary69_99IsD() {
+        assertEquals("D", calc.letterGrade(69.99));
+    }
+
+    @Test
+    void boundary0IsF() {
+        assertEquals("F", calc.letterGrade(0));
+    }
+
+    @Test
+    void boundary100IsA() {
+        assertEquals("A", calc.letterGrade(100));
+    }
+
+    @Test
+    void boundary89_99IsB() {
+        assertEquals("B", calc.letterGrade(89.99));
+    }
+
+    @Test
+    void boundary90IsA() {
+        assertEquals("A", calc.letterGrade(90));
+    }
 }
